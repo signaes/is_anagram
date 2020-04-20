@@ -14,22 +14,24 @@ fn main() {
 fn is_anagram(a: &str, b: &str) -> bool {
     if a.chars().count() != b.chars().count() {
         return false;
+    } else if a.chars().as_str() == b.chars().as_str() {
+        return true;
     }
 
     let mut a_map: HashMap<String, usize> = HashMap::new();
-    let mut b_map: HashMap<String, usize> = HashMap::new();
 
     for c in a.chars() {
         *a_map.entry(c.to_string()).or_insert(0) += 1;
     }
 
-    for b in b.chars() {
-        *b_map.entry(b.to_string()).or_insert(0) += 1;
-    }
-
-    for (c, count) in &a_map {
-        if b_map.get(&c.to_string()) == None || b_map.get(&c.to_string()).unwrap() != count {
-            return false;
+    for l in b.chars() {
+        match a_map.get_mut(&l.to_string()) {
+            None | Some(0) => {
+                return false;
+            },
+            Some(y) => {
+                *y -= 1;
+            },
         }
     }
 
